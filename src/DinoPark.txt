@@ -1,0 +1,883 @@
+---------------------------------- DinosaurTester.java -----------------------------------------------------------------
+/** Alejandro Mijares
+ * March 26, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+
+import java.util.Scanner;
+
+/**
+ * Welcome to Dino Park, the non-time period specific park containing
+ * several amazing dinosaurs! You will be able to see and learn about multiple
+ * wonderful dinosaurs from several eras.
+ *
+ * ASCII Art from asciiart.eu
+ * https://www.asciiart.eu/animals/reptiles/dinosaurs
+ */
+public class DinosaurTester {
+    /**
+     * Array containing all the Dinosaurs currently kept in Dino Park!
+     */
+    private static Dinosaur[] dinosaurs = new Dinosaur[10];
+
+    /**
+     * Main method that will guide you through the wonderful world
+     * of DINO PARK!
+     * Note: You only get 5 chances to make a mistake in the main menu.
+     * More than that will kick you out of the park!
+     */
+    public static void main(String[] args) {
+        int choice;
+        int active = 5;
+        populatePark();
+        welcomeMessage();
+
+        Scanner input = new Scanner(System.in);
+        while (active > -1){
+            generalMenuText();
+            choice = input.nextInt();
+            if (choice == 1){
+                printAllDinos();
+            }
+            else if (choice == 2) {
+                chooseDino(input);
+            }
+            else if (choice == 3) {
+                compareTwoDinos(input);
+            }
+            else if (choice == 4) {
+                active = -42;
+            }
+            else {
+                System.out.println("Sorry, I didn't understand that. Please enter a number.");
+                active -= 1;
+            }
+        }
+        goodByeMessage();
+    }
+
+    /**
+     * Function that will print the names of all the Dinos in the park
+     */
+    private static void printAllDinos(){
+        for (int i = 0; i < 10; i++) {
+            System.out.println(i+1 + ". " + dinosaurs[i].getName());
+        }
+    }
+
+    /**
+     * Fills the park with all the relevant Dinos!
+     */
+    private static void populatePark(){
+        dinosaurs[0] = new CP_Coloradisaurus();
+        dinosaurs[1] = new CT_Archaeopteryx();
+        dinosaurs[2] = new CT_Deinonychus();
+        dinosaurs[3] = new CT_Tyrannosaurus();
+        dinosaurs[4] = new CT_Velociraptor();
+        dinosaurs[5] = new HO_Ankylosaurus();
+        dinosaurs[6] = new HO_Parasaurolophus();
+        dinosaurs[7] = new HO_Stegosaurus();
+        dinosaurs[8] = new HS_Brachiosaurus();
+        dinosaurs[9] = new HS_Dreadnoughtus();
+    }
+
+    /**
+     * Prints out the greeting given to every guest
+     */
+    private static void welcomeMessage(){
+        System.out.println("Welcome... to DINO PARK!!!");
+        printDino();
+        System.out.println("This is a wonderful place containing several amazing dinosaurs!");
+        System.out.println("Unlike other parks, this one does not pretend to limit itself to a single era.");
+        System.out.println("We will take you on a tour through the park, but you have some choices!");
+    }
+
+    /**
+     * Prints out the general menu which gives the initial choices available to guests
+     */
+    private static void generalMenuText(){
+        System.out.println("\n\tMain Menu");
+        System.out.println("1. List all the dinosaurs");
+        System.out.println("2. Select a dinosaur to get to know!");
+        System.out.println("3. Compare the size of two dinos!");
+        System.out.println("4. Exit Dino Park");
+        System.out.println("Please enter 1, 2, 3, or 4.");
+    }
+
+    /**
+     * Function which helps the user select a dinosaur from the park's selection.
+     * @param input Scanner object that takes user input
+     */
+    private static void chooseDino(Scanner input){
+        printAllDinos();
+        System.out.println("Which dino would you like to learn more about?");
+        System.out.println("Please enter the number by its name.");
+        int currentDino = input.nextInt();
+        exploreDino(currentDino - 1, input);
+    }
+
+    /**
+     * Function that helps the user learn more about the dinosaur they selected.
+     * @param i integer that holds which dinosaur the user selected
+     * @param input Scanner object that takes user input
+     */
+    private static void exploreDino(int i, Scanner input){
+        Dinosaur dino = dinosaurs[i];
+        int choice = 0;
+        System.out.println("You have selected " + dino.getName() + "!");
+        System.out.println("Great choice! Now, we can learn more about it!");
+        while (choice != 3){
+            dinoMenuText();
+            choice = input.nextInt();
+            if (choice == 1) {
+                System.out.println(dino);
+            } else if (choice == 2) {
+                System.out.println(dino.moveInHerds());
+            } else if (choice == 3) {
+                System.out.println("Back to main menu \n");
+            } else {
+                System.out.println("Sorry, I didn't understand. Please enter a number from the choices provided.");
+            }
+        }
+    }
+
+    /**
+     * Function containing the menu text for a selected dinosaur.
+     */
+    private static void dinoMenuText(){
+        System.out.println("\n1. General Overview");
+        System.out.println("2. Do they move in herds?");
+        System.out.println("3. Return to the main menu.");
+        System.out.println("Please enter 1, 2, or 3.");
+    }
+
+    /**
+     * Function that allows a user to compare two dinosaurs found in the park
+     * @param input Scanner object that takes user input
+     */
+    private static void compareTwoDinos(Scanner input){
+        printAllDinos();
+        System.out.println("Select the first dino you'd like to compare: ");
+        int choice = input.nextInt();
+        while (10 < choice || choice < 1) {
+            System.out.println("Please enter a number 1-10");
+            choice = input.nextInt();
+        }
+        Dinosaur dino1 = dinosaurs[choice - 1];
+        System.out.println("Select the second dino you'd like to compare: ");
+        choice = input.nextInt();
+        while (10 < choice || choice < 1) {
+            System.out.println("Please enter a number 1-10");
+            choice = input.nextInt() - 1;
+        }
+        Dinosaur dino2 = dinosaurs[choice - 1];
+        int size = dino1.compareTo(dino2);
+        if (size == 1){
+            System.out.println(dino1.getName() + " is bigger than " + dino2.getName());
+        }
+        else if (size == -1){
+            System.out.println(dino1.getName() + " is smaller than " + dino2.getName());
+        }
+        else {
+            System.out.println(dino1.getName() + " is the same size as " + dino2.getName());
+        }
+    }
+
+    /**
+     * Says goodbye to the user, and thanks them for coming.
+     */
+    private static void goodByeMessage(){
+        System.out.println("Thanks for coming to Dino Park!");
+        printDino();
+    }
+
+    /**
+     * Prints a cute sauropod
+     */
+    private static void printDino(){
+        System.out.println( "               __\n" +
+                            "              / _)\n" +
+                            "     _.----._/ /\n" +
+                            "    /         /\n" +
+                            " __/ (  | (  |\n" +
+                            "/__.-'|_|--|_|\n");}
+}
+---------------------------------- Dinosaur.java -----------------------------------------------------------------------
+/** Alejandro Mijares
+ * March 26, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+
+/**
+ * The Dinosaur interface creates a template for the creatures in Dino Park
+ */
+public interface Dinosaur extends Comparable<Object>{
+    /**
+     * Gives you the name of the Dino.
+     * @return String name of Dino
+     */
+    String getName();
+
+    /**
+     * Gives you the length of the Dino in meters.
+     * @return
+     */
+    int getSize();
+
+    /**
+     * They do move in herds! Or they don't. This function lets you know.
+     *
+     * @return boolean
+     */
+    String moveInHerds();
+
+    /**
+     * Returns what time period the dinosaur was found in.
+     * @return string (i.e. Late Triassic, Early Jurassic, etc.)
+     */
+    String getTimePeriod();
+
+    /**
+     * Returns short fact about the dino!
+     * @return String containing the fact
+     */
+    String getTidbit();
+
+    /**
+     * Get an artists rendering of what the dinosaur looked like!
+     * Not likely to be accurate.
+     * @return String (ASCII)
+     */
+    String getAscii();
+
+    /**
+     * Compares sizes between dinosaurs!
+     * 1 means other dino is smaller
+     * 0 means same size
+     * -1 means other dino is bigger
+     * @param o the object to be compared.
+     * @return int [-1,0,1]
+     */
+    @Override
+    int compareTo(Object o);
+}
+---------------------------------- Carnivore.java ----------------------------------------------------------------------
+/** Alejandro Mijares
+ * March 26, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+
+/**
+ * Carnivore, an implementation of the Dinosaur interface.
+ * Has all the classes within Dinosaur, with minor modifications
+ * specific to the Carnivore type.
+ */
+public abstract class Carnivore implements Dinosaur{
+
+    private String name;
+    private int size;
+    private String ascii;
+    private String tidbit;
+    private String timePeriod;
+
+    public Carnivore(String setName, int setSize, String setAscii, String setTidbit, String setTimePeriod) {
+        name = setName;
+        size = setSize;
+        ascii = setAscii;
+        tidbit = setTidbit;
+        timePeriod = setTimePeriod;
+    }
+
+    public String getTidbit() {
+        return tidbit;
+    }
+
+
+    public int getSize() {
+        return size;
+    }
+
+
+    public String getAscii() {
+        return ascii;
+    }
+
+
+    @Override
+    public String getName() {
+        return name;
+    }
+    @Override
+    public String moveInHerds() {
+        return "They... don't move in herds.";
+    }
+
+    @Override
+    public String getTimePeriod() {
+        return timePeriod;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Dinosaur other = (Dinosaur) o;
+        if (other.getSize() > size){
+            return -1;
+        }
+        else if (other.getSize() < size){
+            return 1;
+        }
+        return 0;
+    }
+
+    @Override
+    public String toString() {
+        return  name + " was a Carnivore" +
+                ", was " + size + " meters long" +
+                ", and lived in the " + timePeriod + "!\n" +
+                tidbit + "\n" +
+                ascii;
+    }
+}
+
+---------------------------------- Herbivore.java ----------------------------------------------------------------------
+/** Alejandro Mijares
+ * March 26, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+
+/**
+ * Herbivore, an implementation of the Dinosaur interface.
+ * Has all the classes within Dinosaur, with minor modifications
+ * specific to the Herbivore type.
+ */
+public abstract class Herbivore implements Dinosaur {
+
+    private String name;
+    private int size;
+    private String ascii;
+    private String tidbit;
+    private String timePeriod;
+
+    public Herbivore(String setName, int setSize, String setAscii, String setTidbit, String setTimePeriod) {
+        name = setName;
+        size = setSize;
+        ascii = setAscii;
+        tidbit = setTidbit;
+        timePeriod = setTimePeriod;
+    }
+
+    public String getTidbit() {
+        return tidbit;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public String getAscii() {
+        return ascii;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+    @Override
+    public String moveInHerds() {
+
+        /**
+         * Relevant YouTube link (LOUD)
+         * Jurassic Park Theme Song (Melodica Cover)
+         * https://www.youtube.com/watch?v=-w-58hQ9dLk
+          */
+        return "They DO move in herds! *cue Theme music*";
+    }
+
+    @Override
+    public String getTimePeriod() {
+        return timePeriod;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Dinosaur other = (Dinosaur) o;
+        if (other.getSize() > size){
+            return -1;
+        }
+        else if (other.getSize() < size){
+            return 1;
+        }
+        return 0;
+    }
+
+    @Override
+    public String toString() {
+        return  name + " was an Herbivore" +
+                ", was " + size + " meters long" +
+                ", and lived in the " + timePeriod + "!\n" +
+                tidbit + "\n" +
+                ascii;
+    }
+}
+---------------------------------- C_Prosauropod.java ------------------------------------------------------------------
+/**
+ * Alejandro Mijares
+ * Month Day, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+
+/**
+ * Special case within the carnivore class.
+ * The Prosauropod family contain omnivorous dinosaurs.
+ * In order to maintain the established system, the Prosauropod
+ * was grouped together with Carnivores in order to not upset the
+ * Herbivores, as they got skittish at the last reunion.
+ */
+public class C_Prosauropod extends Carnivore {
+    public C_Prosauropod(String setName, int setSize, String setAscii, String setTidbit, String setTimePeriod) {
+        super(setName, setSize, setAscii, setTidbit, setTimePeriod);
+    }
+
+    @Override
+    public String moveInHerds() {
+        return "They DO move in herds! *cue Theme music*";
+    }
+}
+
+---------------------------------- C_Theropod.java ---------------------------------------------------------------------
+/** Alejandro Mijares
+ * March 26, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+public class C_Theropod extends Carnivore{
+
+    public C_Theropod(String setName, int setSize, String setAscii, String setTidbit, String setTimePeriod) {
+        super(setName, setSize, setAscii, setTidbit, setTimePeriod);
+    }
+}
+
+---------------------------------- H_Ornithopod.java -------------------------------------------------------------------
+/**
+ * Alejandro Mijares
+ * Month Day, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+public class H_Ornithopod extends Herbivore {
+    public H_Ornithopod(String setName, int setSize, String setAscii, String setTidbit, String setTimePeriod) {
+        super(setName, setSize, setAscii, setTidbit, setTimePeriod);
+    }
+}
+
+---------------------------------- H_Sauropod.java ---------------------------------------------------------------------
+/** Alejandro Mijares
+ * March 26, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+public class H_Sauropod extends Herbivore{
+    public H_Sauropod(String setName, int setSize, String setAscii, String setTidbit, String setTimePeriod) {
+        super(setName, setSize, setAscii, setTidbit, setTimePeriod);
+    }
+}
+
+---------------------------------- CP_Coloradisaurus.java --------------------------------------------------------------
+/**
+ * Alejandro Mijares
+ * Month Day, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+public class CP_Coloradisaurus extends C_Prosauropod{
+    /**
+     * Inherited Constructor
+     * Takes Name, Size, ASCII String, Fact, Time Period
+     */
+    public CP_Coloradisaurus() {
+        super("Coloradisaurus",
+                3,
+                "Higher Resolution unavailable.\n" +
+                " ,--.\n" +
+                "`.`_.`\\\n" +
+                "     \\ \\\n" +
+                "      \\ \\\n" +
+                "       \\ \\\n" +
+                "        \\ `-''^^^^^''-.\n" +
+                "         \\             `-._\n" +
+                "         >>   >  <  <__    ^'-----...,,_\n" +
+                "  jgs   //__/`---'\\__\\\\`'\"\"\"\"'\"'\"'\"'''''``\n" +
+                "       `\"`\"\"      `\"\"`\"\n",
+                "Coloradisaurus was found in Los Colorados Formation in Argentina. Not Colorado, USA!",
+                "Late Triassic");
+    }
+}
+---------------------------------- CT_Archaeopteryx.java ---------------------------------------------------------------
+/**
+ * Alejandro Mijares
+ * Month Day, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+public class CT_Archaeopteryx extends C_Theropod{
+    /**
+     * Inherited Constructor
+     * Takes Name, Size, ASCII String, Fact, Time Period
+     */
+    public CT_Archaeopteryx() {
+        super("Archaeopteryx",
+                1,
+                "                     _\n" +
+                "                  __~a~_\n" +
+                "                  ~~;  ~_\n" +
+                "    _                ~  ~_                _\n" +
+                "   '_\\;__._._._._._._]   ~_._._._._._.__;/_`\n" +
+                "   '(/'/'/'/'|'|'|'| (    )|'|'|'|'\\'\\'\\'\\)'\n" +
+                "   (/ / / /, | | | |(/    \\) | | | ,\\ \\ \\ \\)\n" +
+                "  (/ / / / / | | | ^(/    \\) ^ | | \\ \\ \\ \\ \\)\n" +
+                " (/ / / / /  ^ ^ ^   (/  \\)    ^ ^  \\ \\ \\ \\ \\)\n" +
+                "(/ / / / ^          / (||)|          ^ \\ \\ \\ \\)\n" +
+                "^ / / ^            M  /||\\M             ^ \\ \\ ^\n" +
+                " ^ ^                  /||\\                 ^ ^\n" +
+                "                     //||\\\\\n" +
+                "                     //||\\\\\n" +
+                "                     //||\\\\         \n" +
+                "                     '/||\\'\n",
+                "Archaeopteryx, meaning Old Wing, was originally thought to be the ancestor of modern birds " +
+                "due to how similar it appears, but current thinking is that the link between birds and " +
+                "dinosaurs is much more complicated!",
+                "Late Jurassic");
+    }
+}
+---------------------------------- CT_Deinonychus.java -----------------------------------------------------------------
+/**
+ * Alejandro Mijares
+ * Month Day, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+public class CT_Deinonychus extends C_Theropod{
+    /**
+     * Inherited Constructor
+     * Takes Name, Size, ASCII String, Fact, Time Period
+     */
+    public CT_Deinonychus() {
+        super("Deinonychus",
+                4,
+                "                                                    -- __\n" +
+                "                                                  ~ (@)  ~~~---_\n" +
+                "                                                {     `-_~=======)\n" +
+                "                                                {    (_  ',\n" +
+                "                                                 ~    . = _',\n" +
+                "                                                  ~    '.  =-'\n" +
+                "                                                    ~     :\n" +
+                ".                                                -~     (\"\");\n" +
+                " '.                                         --~        \\  \\ ;\n" +
+                "   \".-_                                   -~            \\  \\;      _-====\n" +
+                "      -~- _                          -~                 {  \"---- _'-====\n" +
+                "        ~- _~-  _              _ -~                     ~---------==.=`\n" +
+                "             ~-  ~~-----~~~~~~       .+++~~~~~~~~-__   /\n" +
+                "                 ~-   __            {   -     +   }   /\n" +
+                "                          ~- ______{_    _ -=\\ / /_ ~\n" +
+                "                              :      ~--~    // /         ..-\n" +
+                "                              :   / /      // /         ((\n" +
+                "                              :  / /      {   `-------=. ))\n" +
+                "                              :   /        '\"=--------. }o\n" +
+                "                 .=._________,'  )                     ))\n" +
+                "                 )  _________ -''                     ~~\n" +
+                "                / /  _ _                   =\n" +
+                "               (_.-.'O'-'.\n",
+                "Deinonychus was the actual dinosaur in Jurassic Park, despite being called velociraptor." +
+                "They showed up on time, but still didn't get the credit :(",
+                "Late Jurassic");
+    }
+}
+
+---------------------------------- CT_Velociraptor.java ----------------------------------------------------------------
+/**
+ * Alejandro Mijares
+ * Month Day, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+public class CT_Velociraptor extends C_Theropod{
+    public CT_Velociraptor() {
+        /**
+         * Inherited Constructor
+         * Takes Name, Size, ASCII String, Fact, Time Period
+         */
+        super("Velociraptor",
+                2,
+                "                                                     ___._\n" +
+                "                                                   .'  <0>'-.._\n" +
+                "                                                  /  /.--.____\")\n" +
+                "                                                 |   \\   __.-'~\n" +
+                "                                                 |  :  -'/\n" +
+                "                                                /:.  :.-'\n" +
+                "__________                                     | : '. |\n" +
+                "'--.____  '--------.______       _.----.-----./      :/\n" +
+                "        '--.__            `'----/       '-.      __ :/\n" +
+                "              '-.___           :           \\   .'  )/\n" +
+                "                    '---._           _.-'   ] /  _/\n" +
+                "                         '-._      _/     _/ / _/\n" +
+                "                             \\_ .-'____.-'__< |  \\___\n" +
+                "                               <_______.\\    \\_\\_---.7\n" +
+                "                              |   /'=r_.-'     _\\\\ =/\n" +
+                "                          .--'   /            ._/'>\n" +
+                "                        .'   _.-'\n" +
+                "   snd                 / .--'\n" +
+                "                      /,/\n" +
+                "                      |/`)\n" +
+                "                      'c=,\n",
+                "Didn't actually star in Jurassic Park, that was actually a Deinonychus." +
+                        "Maybe because it didn't show up on time to rehearsal?",
+                "Late Cretaceous");
+    }
+}
+
+---------------------------------- CT_Tyrannosaurus.java ---------------------------------------------------------------
+/**
+ * Alejandro Mijares
+ * Month Day, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+public class CT_Tyrannosaurus extends C_Theropod{
+    /**
+     * Inherited Constructor
+     * Takes Name, Size, ASCII String, Fact, Time Period
+     */
+    public CT_Tyrannosaurus() {
+        super("Tyrannosaurus",
+                13,
+                "                                              ____\n" +
+                "  ___                                      .-~. /_\"-._\n" +
+                "`-._~-.                                  / /_ \"~o\\  :Y\n" +
+                "      \\  \\                                / : \\~x.  ` ')\n" +
+                "      ]  Y                              /  |  Y< ~-.__j\n" +
+                "     /   !                        _.--~T : l  l<  /.-~\n" +
+                "    /   /                 ____.--~ .   ` l /~\\ \\<|Y\n" +
+                "   /   /             .-~~\"        /| .    ',-~\\ \\L|\n" +
+                "  /   /             /     .^   \\ Y~Y \\.^>/l_   \"--'\n" +
+                " /   Y           .-\"(  .  l__  j_j l_/ /~_.-~    .\n" +
+                "Y    l          /    \\  )    ~~~.\" / `/\"~ / \\.__/l_\n" +
+                "|     \\     _.-\"      ~-{__     l  :  l._Z~-.___.--~\n" +
+                "|      ~---~           /   ~~\"---\\_  ' __[>\n" +
+                "l  .                _.^   ___     _>-y~\n" +
+                " \\  \\     .      .-~   .-~   ~>--\"  /\n" +
+                "  \\  ~---\"            /     ./  _.-'\n" +
+                "   \"-.,_____.,_  _.--~\\     _.-~\n" +
+                "               ~~     (   _}       -Row\n" +
+                "                      `. ~(\n" +
+                "                        )  \\\n" +
+                "                  /,`--'~\\--'~\\\n" +
+                "                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n",
+                "Tyrannosaurus Rex, had tiny little arms. New research indicates that they were extremely powerful " +
+                "and may have been used to hold its prey in a vice like grip!",
+                "Late Cretaceous");
+    }
+}
+---------------------------------- HO_Ankylosaurus.java ----------------------------------------------------------------
+/**
+ * Alejandro Mijares
+ * Month Day, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+public class HO_Ankylosaurus extends H_Ornithopod{
+    /**
+     * Inherited Constructor
+     * Takes Name, Size, ASCII String, Fact, Time Period
+     */
+    public HO_Ankylosaurus() {
+        super("Ankylosaurus",
+                8,
+                "                     /~~~~~~~~~~~~\\_\n" +
+                " _+=+_             _[~  /~~~~~~~~~~~~\\_\n" +
+                "{\"\"|\"\"}         [~~~    [~   /~~~~~~~~~\\_\n" +
+                " \"\"\":-'~[~[~\"~[~  ((++     [~  _/~~~~~~~~\\_\n" +
+                "      '=_   [    ,==, ((++    [    /~~~~~~~\\-~~~-.\n" +
+                "         ~-_ _=+-(   )/   ((++  .~~~.[~~~~(  {@} \\`.\n" +
+                "                 /   }\\ /     (     }     (   .   ''}\n" +
+                "                (  .+   \\ /  //     )    / .,  \"\"\"\"/\n" +
+                "                \\\\  \\     \\ (   .+~~\\_  /.= /'\"\"\"\"\n" +
+                "                <\"_V_\">      \\\\  \\    ~~~~~~\\\\  \\\n" +
+                "                              \\\\  \\          \\\\  \\\n" +
+                "                              <\"_V_\">        <\"_V_\">",
+                "Ankylosaurus had a fearsome tail club, that it seems to have used as a defensive weapon!",
+                "Late Cretaceous");
+    }
+}
+---------------------------------- HO_Parasaurolophus.java -------------------------------------------------------------
+/**
+ * Alejandro Mijares
+ * Month Day, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+public class HO_Parasaurolophus extends H_Ornithopod{
+    /**
+     * Inherited Constructor
+     * Takes Name, Size, ASCII String, Fact, Time Period
+     */
+    public HO_Parasaurolophus() {
+        super("Parasaurolophus",
+                10,
+                "          _\n" +
+                "         //\n" +
+                "        //\n" +
+                "     __/(\n" +
+                " _.~-a  ~-.\n" +
+                "{_____)    `.           _..=~~~~=._\n" +
+                "      ~-_    \\      _.=~           '=.\n" +
+                "         \\    `._.=~            .=.   :=._\n" +
+                "          -         __         (   \\   : \\)\n" +
+                "           ~.      (  }       (     |   : :\n" +
+                "             `:     \\ \\        \\    |\\   ; :\n" +
+                "               \\     \\ }        \\   / |  ;  }\n" +
+                "                `-.__//__.==~~=._\\ (_/  ;  ;    =\n" +
+                "                    //           | |/  ;  ;\n" +
+                "                   {{       _____|_/ ;   ;        *     ___\n" +
+                "                    `      ---- _=.=`   ~ _____   ||*    ____\n" +
+                "                            __:='    .='     ___\\\\||/___\n" +
+                "                        ..:~____.==\n",
+                "It is uncertain what Parasaurolophus used its cranial crest for, but experts suggest it was used" +
+                "for sound amplification, heat regulation, and looking good!",
+                "Late Cretaceous");
+    }
+}
+---------------------------------- HO_Stegosaurus.java -----------------------------------------------------------------
+/**
+ * Alejandro Mijares
+ * Month Day, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+public class HO_Stegosaurus extends H_Ornithopod{
+    /**
+     * Inherited Constructor
+     * Takes Name, Size, ASCII String, Fact, Time Period
+     */
+    public HO_Stegosaurus() {
+        super("Stegosaurus",
+                7,
+                "                         .       .\n" +
+                "                        / `.   .' \\\n" +
+                "                .---.  <    > <    >  .---.\n" +
+                "                |    \\  \\ - ~ ~ - /  /    |\n" +
+                "                 ~-..-~             ~-..-~\n" +
+                "             \\~~~\\.'                    `./~~~/\n" +
+                "   .-~~^-.    \\__/                        \\__/\n" +
+                " .'  O    \\     /               /       \\  \\\n" +
+                "(_____,    `._.'               |         }  \\/~~~/\n" +
+                " `----.          /       }     |        /    \\__/\n" +
+                "       `-.      |       /      |       /      `. ,~~|\n" +
+                "           ~-.__|      /_ - ~ ^|      /- _      `..-'   f: f:\n" +
+                "                |     /        |     /     ~-.     `-. _||_||_\n" +
+                "                |_____|        |_____|         ~ - . _ _ _ _ _>\n",
+                "Though no one is sure what the plates on the Stegosaurus' back were for, " +
+                "new evidence strongly suggests that its tail was used as a weapon.",
+                "Late Jurassic");
+    }
+}
+---------------------------------- HS_Brachiosaurus.java ---------------------------------------------------------------
+/**
+ * Alejandro Mijares
+ * Month Day, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+public class HS_Brachiosaurus extends H_Sauropod{
+    /**
+     * Inherited Constructor
+     * Takes Name, Size, ASCII String, Fact, Time Period
+     */
+    public HS_Brachiosaurus() {
+        super("Brachiosaurus",
+                22,
+                "   _\n" +
+                " .~q`,\n" +
+                "{__,  \\\n" +
+                "    \\' \\\n" +
+                "     \\  \\\n" +
+                "      \\  \\\n" +
+                "       \\  `._            __.__\n" +
+                "        \\    ~-._  _.==~~     ~~--.._\n" +
+                "         \\        '                  ~-.\n" +
+                "          \\      _-   -_                `.\n" +
+                "           \\    /       }        .-    .  \\\n" +
+                "            `. |      /  }      (       ;  \\\n" +
+                "              `|     /  /       (       :   '\\\n" +
+                "               \\    |  /        |      /       \\    =\n" +
+                "                |     /`-.______.\\     |^-.      \\\n" +
+                "                |   |/           (     |   `.      \\_\n" +
+                "                |   ||            ~\\   \\      '._    `-.._____..----.._=__\n" +
+                "                |   |/             _\\   \\      =~-.__________.-~~~~~~~~~'''\n" +
+                "              .o'___/            .o______}\n",
+                "One of the most iconic dinosaurs, current findings indicate that Brachiosaurus (meaning Arm Lizard)" +
+                " was actually warm blooded!",
+                "Late Jurassic");
+    }
+}
+---------------------------------- HS_Dreadnoughtus.java -----------------------------------------------------------------
+/**
+ * Alejandro Mijares
+ * Month Day, 2023
+ * Panther ID: 3145563
+ * Program Version: 1.0
+ * Java Version: 8
+ */
+public class HS_Dreadnoughtus extends H_Sauropod{
+    /**
+     * Inherited Constructor
+     * Takes Name, Size, ASCII String, Fact, Time Period
+     */
+    public HS_Dreadnoughtus() {
+        super("Dreadnoughtus",
+                26,
+                "   .-~~^-.\n" +
+                " .'  O    \\\n" +
+                "(_____,    \\\n" +
+                " `----.     \\\n" +
+                "       \\     \\\n" +
+                "        \\     \\\n" +
+                "         \\     `.             _ _\n" +
+                "          \\       ~- _ _ - ~       ~ - .\n" +
+                "           \\                              ~-.\n" +
+                "            \\                                `.\n" +
+                "             \\    /               /       \\    \\\n" +
+                "              `. |         }     |         }    \\\n" +
+                "                `|        /      |        /       \\\n" +
+                "                 |       /       |       /          \\\n" +
+                "                 |      /`- _ _ _|      /.- ~ ^-.     \\\n" +
+                "                 |     /         |     /          `.    \\\n" +
+                "                 |     |         |     |             -.   ` . _ _ _ _ _ _\n" +
+                "                 |_____|         |_____|                ~ . _ _ _ _ _ _ _ >",
+                "Kenneth Lacovara, who discovered the species, chose the name Dreadnoughtus, which means \"" +
+                "fears nothing\", stating \n\"I think it’s time the herbivores get their due for being the " +
+                "toughest creatures in an environment.\"",
+                "Late Cretaceous");
+    }
+}
